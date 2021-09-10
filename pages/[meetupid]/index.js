@@ -1,14 +1,21 @@
+import Head from "next/head";
 import { MongoClient, ObjectId } from "mongodb";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
 
 export default function MeetupDetails(props) {
-  return <MeetupDetail data={props.meetupData} />;
+  return (
+    <>
+      <Head>
+        <title>{props.meetupData.title}</title>
+        <meta name="description" content={props.meetupData.description} />
+      </Head>
+      <MeetupDetail data={props.meetupData} />
+    </>
+  );
 }
 
 export async function getStaticPaths() {
-  const client = await MongoClient.connect(
-    "mongodb+srv://jvstblvck:130404010@cluster0.beanb.mongodb.net/meetups?retryWrites=true&w=majority"
-  );
+  const client = await MongoClient.connect(process.env.MONGODB_URL);
   const db = client.db();
   const meetupsCollection = db.collection("meetups");
 
@@ -26,9 +33,7 @@ export async function getStaticProps(context) {
   // fetch data from an API
 
   const meetupId = context.params.meetupid;
-  const client = await MongoClient.connect(
-    "mongodb+srv://jvstblvck:130404010@cluster0.beanb.mongodb.net/meetups?retryWrites=true&w=majority"
-  );
+  const client = await MongoClient.connect(process.env.MONGODB_URL);
   const db = client.db();
   const meetupsCollection = db.collection("meetups");
 
